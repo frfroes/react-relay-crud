@@ -1,3 +1,17 @@
+.dashboard > .header {
+    display: flex;
+    position: relative;
+    right: 0;
+}
+
+.dashboard > .header > button {
+    position: absolute !important;;
+    right: 0;
+    padding: 10px !important;
+    font-size: initial !important;
+    display: none !important;
+}
+    
 .dashboard > .content {
     display: flex;
     justify-content: space-between;
@@ -23,4 +37,14 @@
     .segment {
         height: auto;
     }
+
+    .dashboard > .content > div:last-child {
+        position: absolute;
+        right: -300px;
+    }
+
+    .dashboard > .header > button {
+        display: initial !important;
+    }
+
 }
