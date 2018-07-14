@@ -3,6 +3,8 @@ import { graphql, QueryRenderer } from 'react-relay';
 
 import { environment } from './enviroment';
 
+import { Dashboard } from './views';
+
 const APP_QUERY = graphql`
   query appQuery {
     viewer {
@@ -11,6 +13,7 @@ const APP_QUERY = graphql`
 }
 `
 class App extends Component {
+
   render() {
     return (
       <QueryRenderer
@@ -18,13 +21,7 @@ class App extends Component {
         query={APP_QUERY}
         variables={{}}
         render={({error, props}) => {
-          if (error) {
-            return <div>Error!</div>;
-          }
-          if (!props) {
-            return <div>Loading...</div>;
-          }
-          return <div>User ID: {props.viewer.id}</div>;
+          return <Dashboard header={{icon: 'user', label: 'User'}}/>
         }}
       />
     );
@@ -32,3 +29,11 @@ class App extends Component {
 }
 
 export default App;
+
+// if (error) {
+//   return <div>Error!</div>;
+// }
+// if (!props) {
+//   return <div>Loading...</div>;
+// }
+// return <div>User ID: {props.viewer.id}</div>;
