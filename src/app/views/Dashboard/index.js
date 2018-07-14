@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 
-import { Segment, Header, Icon, Container  } from 'semantic-ui-react'
+import { Segment, Header, Icon, Container, Dimmer, Loader  } from 'semantic-ui-react'
+
+import { PlaceholderList } from '../../components';
 
 import './index.css'
 
@@ -19,7 +21,7 @@ export class Dashboard extends Component {
         <div className="content">
           <div>
             <Segment>
-              {data.isReady && data.component}
+              {data.isReady? data.component : <PlaceholderList length={3}/>}
             </Segment>
           </div>
           <div>
