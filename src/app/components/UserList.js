@@ -1,6 +1,8 @@
 import React from 'react';
 import Relay, { graphql } from 'react-relay';
 
+import { Card } from 'semantic-ui-react'
+
 import { UserItem } from '../components/';
 
 const USER_LIST_FRAG = graphql`
@@ -22,13 +24,14 @@ class UserListComponent extends React.Component<Props> {
     const { userListData: { allUsers } } = this.props;
     
     return (
-        <ul>
-        {allUsers.edges.map( edges => 
-            <UserItem 
-                key={edges.node.id}
-                user={edges.node}/>
-        )}
-        </ul>
+        <Card.Group itemsPerRow={2} stackable>
+            {allUsers.edges.map( edges => 
+                <UserItem 
+                    key={edges.node.id}
+                    user={edges.node}/>
+            )}
+        </Card.Group>
+        
     );
   }
 }

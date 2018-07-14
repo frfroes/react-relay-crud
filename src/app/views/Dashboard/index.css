@@ -1,0 +1,21 @@
+.dashboard > .content {
+    display: flex;
+}
+
+.segment {
+    height: calc(100vh - 130px);
+}   
+
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+    .dashboard > .content > div:first-child {
+        width: 100%;
+    }   
+
+    .dashboard .stackable {
+        margin-top: 0;
+    }
+
+    .segment {
+        height: auto;
+    }
+}
