@@ -38,9 +38,23 @@
         height: auto;
     }
 
-    .dashboard > .content > div:last-child {
+    .dashboard > .content > div:last-child{
+        width: 100%;
+        margin: 0 30px;
+    }
+    
+    .dashboard > .content > div {
+        transition: transform ease-in-out 200ms;
+    }
+
+    .dashboard > .content > div.hidden-mobile:last-child {
         position: absolute;
-        right: -300px;
+        transform: translateX(120vw);
+    }
+
+    .dashboard > .content > div.hidden-mobile:first-child {
+        position: absolute;
+        transform: translateX(-120vw);
     }
 
     .dashboard > .header > button {
