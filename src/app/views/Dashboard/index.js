@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { Segment, Header, Icon, Container, Dimmer, Loader  } from 'semantic-ui-react'
+import { Segment, Header, Icon, Container } from 'semantic-ui-react'
 
 import { PlaceholderList } from '../../components';
 

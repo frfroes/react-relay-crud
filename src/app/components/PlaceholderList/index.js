@@ -1,5 +1,4 @@
 import React from 'react';
-import Relay, { graphql } from 'react-relay';
 
 import { Card } from 'semantic-ui-react'
 
@@ -34,7 +33,6 @@ export class PlaceholderList extends React.Component {
     }
     
     render() {
-        const { user } = this.props;
 
         return (
             <Card.Group itemsPerRow={2} stackable>
