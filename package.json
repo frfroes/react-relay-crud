@@ -7,15 +7,17 @@
     "graphql-relay": "^0.5.5",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "react-relay": "^1.6.0",
     "react-scripts": "1.1.4",
+    "relay-runtime": "^1.6.0",
     "semantic-ui-react": "^0.82.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "build": "node setup && react-scripts build",
+    "test": "node setup && react-scripts test --env=jsdom",
+    "start": "node setup && react-scripts start",
     "eject": "react-scripts eject",
-    "relay": "relay-compiler --src ./src --schema ./schema.graphql --extensions js jsx"
+    "relay": "relay-compiler --src ./src --schema ./data/schema.graphql"
   },
   "devDependencies": {
     "babel-plugin-relay": "^1.6.0",
