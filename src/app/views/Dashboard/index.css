@@ -1,10 +1,15 @@
 .dashboard > .content {
     display: flex;
+    justify-content: space-between;
 }
 
 .segment {
     height: calc(100vh - 130px);
 }   
+
+.dashboard > .content > div:last-child {
+    width: 300px;
+}
 
 @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
     .dashboard > .content > div:first-child {

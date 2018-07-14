@@ -8,8 +8,8 @@ import './index.css'
 export class PlaceholderList extends React.Component {
   
     _repeatFakeCard(){
-       const fakeCard = (   
-            <Card>
+       const FakeCard = (key) => (  
+            <Card key={key}>
                 <Card.Content>
                     <div className="animated-background">
                         <div className="background-masker header-top"></div>
@@ -30,7 +30,7 @@ export class PlaceholderList extends React.Component {
             </Card>
         )
 
-        return new Array(this.props.length).fill(fakeCard);
+        return new Array(this.props.length).fill().map((_, i) =>  <FakeCard key={i}/>);
     }
     
     render() {

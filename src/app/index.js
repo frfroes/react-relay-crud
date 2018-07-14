@@ -4,7 +4,7 @@ import { graphql, QueryRenderer } from 'react-relay';
 import { environment } from './enviroment';
 
 import { Dashboard } from './views';
-import { UserList } from './components';
+import { UserList, UserForm } from './components';
 
 const APP_QUERY = graphql`
   query appQuery {
@@ -31,7 +31,7 @@ class App extends Component {
                 component: <UserList userListData={props && props.viewer}/>
               }}
               form={{
-                component: null
+                component: <UserForm />
               }}
             />
           )
