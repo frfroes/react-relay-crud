@@ -1,0 +1,24 @@
+{
+  "name": "react-relay-crud",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "graphql": "^0.13.2",
+    "graphql-relay": "^0.5.5",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-scripts": "1.1.4",
+    "semantic-ui-react": "^0.82.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "relay": "relay-compiler --src ./src --schema ./schema.graphql --extensions js jsx"
+  },
+  "devDependencies": {
+    "babel-plugin-relay": "^1.6.0",
+    "relay-compiler": "^1.6.0"
+  }
+}
