@@ -4,11 +4,13 @@ import { graphql, QueryRenderer } from 'react-relay';
 import { environment } from './enviroment';
 
 import { Dashboard } from './views';
+import { UserList } from './components';
 
 const APP_QUERY = graphql`
   query appQuery {
     viewer {
       id
+      ...UserList_userListData
     }  
 }
 `
@@ -21,7 +23,18 @@ class App extends Component {
         query={APP_QUERY}
         variables={{}}
         render={({error, props}) => {
-          return <Dashboard header={{icon: 'user', label: 'User'}}/>
+          return (
+            <Dashboard 
+              header={{icon: 'user', label: 'User'}}
+              data={{
+                isReady: props !== null,
+                component: <UserList userListData={props && props.viewer}/>
+              }}
+              form={{
+                component: null
+              }}
+            />
+          )
         }}
       />
     );

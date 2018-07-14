@@ -6,7 +6,7 @@ export class Dashboard extends Component {
   
   render() {
     
-    const { header, dataComponent, formComponent } = this.props;
+    const { header, data, form } = this.props;
 
     return (
       <Container>
@@ -18,11 +18,11 @@ export class Dashboard extends Component {
           <Grid.Row>
             <Grid.Column width={8}>
               <Segment>
-                {dataComponent}
+                {data.isReady && data.component}
               </Segment>
             </Grid.Column>
             <Grid.Column width={8}>
-                {formComponent}
+                {form.component}
             </Grid.Column>
           </Grid.Row>
         </Grid>
