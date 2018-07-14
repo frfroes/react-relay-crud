@@ -1,6 +1,8 @@
 import React from 'react';
 import Relay, { graphql } from 'react-relay';
 
+import moment from 'moment';
+
 import { Card, List, Button } from 'semantic-ui-react'
 
 const USER_ITEM_FRAG =  graphql`
@@ -23,7 +25,8 @@ class UserItemComponent extends React.Component {
         <Card>
             <Card.Content>
                 <Card.Header>{user.name}</Card.Header>
-                <Card.Meta>{user.createdAt}</Card.Meta>
+                <Card.Meta>Created {moment(user.createdAt).fromNow()}</Card.Meta>
+                <Card.Meta>Last updated {moment(user.updatedAt).fromNow()}</Card.Meta>
                 <List>
                     <List.Item>
                         <List.Icon name='mail' />
