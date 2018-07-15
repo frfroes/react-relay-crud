@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Checkbox, Form, Header } from 'semantic-ui-react'
+import { Message, Form, Header } from 'semantic-ui-react'
 
 export class UserForm extends React.Component {
 
@@ -15,10 +15,17 @@ export class UserForm extends React.Component {
     _handleChange = (e, { name, value }) => {
         const { fields } = this.state;
         const field = fields[name];
+        
         this.setState({fields: { 
             ...fields,
-            [name]: { ...field, value}
+            [name]: { ...field, value }
         }}, () => this._validateField(name))
+    }
+
+    _handleToggle = (e, { name }) => {
+        const { fields } = this.state;
+        const field = fields[name];
+        this._handleChange(e, { name, value: !field.value })
     }
 
     _handleBlur = ({target: { name }}) => {
@@ -28,7 +35,7 @@ export class UserForm extends React.Component {
         if(!field.hasBlurred)
             this.setState({fields: { 
                 ...fields,
-                [name]: { ...field, hasBlurred: true}
+                [name]: { ...field, hasBlurred: true }
             }}, () => this._validateField(name))
     }
 
@@ -40,10 +47,10 @@ export class UserForm extends React.Component {
         switch(name) {
             case 'email':
                 const isValidEmail = field.value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-                if(field.hasBlurred && !isValidEmail){
+                if(field.value && field.hasBlurred && !isValidEmail){
                     error = 'Email adress is invalid'
+                    break
                 }
-            break;
             default:
                 if(field.isRequired && field.hasBlurred && !field.value){
                     error = 'This field is required'
@@ -58,12 +65,22 @@ export class UserForm extends React.Component {
                 }
             });
     }
+
+    _getErrorList(){
+        const { fields } = this.state;
+        return Object.keys(fields).map(key => {
+            if(fields[key].error){
+               return <Message.Item><b>{key} :</b> {fields[key].error}</Message.Item>
+            }
+        })
+    }
     
     render(){
         const { email, name, isActive } = this.state.fields;
-        
+        const errorList = this._getErrorList();
+
         return(
-            <Form>
+            <Form error={errorList.some(e => e)}> 
                 <Header as='h2'>Create user</Header>
                 <Form.Input 
                     error={!!name.error}
@@ -92,10 +109,11 @@ export class UserForm extends React.Component {
                     name="isActive"
                     label="isActive"
                     checked={isActive.value}
-                    onChange={this._handleChange}
+                    onChange={this._handleToggle}
                     onBlur={this._handleBlur}
                 />
                 <Form.Button fluid positive type='submit' content="Create"/>
+                <Message error header='Could you check something?' list={errorList}/> 
             </Form>
         )
     }
