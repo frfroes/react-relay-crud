@@ -21,6 +21,10 @@
     height: calc(100vh - 130px);
 }   
 
+.dashboard > .content > div:first-child{
+    width: 750px;
+}
+
 .dashboard > .content > div:last-child {
     width: 300px;
 }
