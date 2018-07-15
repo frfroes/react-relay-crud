@@ -1,7 +1,28 @@
-import React from 'react'
+import React from 'react';
+import Relay, { graphql } from 'react-relay';
 import { Message, Form, Header } from 'semantic-ui-react'
 
-export class UserForm extends React.Component {
+import { UpdateOrCreateUserMutation } from '../mutations'
+
+const USER_DATA_FRAG = graphql`
+    fragment UserForm_user on User {
+        active
+        email
+        id
+        name
+    }
+`
+const REFETCH_QUERY = graphql`
+    query UserFormQuery($itemID: ID!) {
+        viewer{
+            User(id: $itemID) {
+                ...UserForm_user
+            }
+        }
+    }
+`
+
+class UserFormComponent extends React.Component {
 
     state = {
         fields:{
@@ -39,6 +60,24 @@ export class UserForm extends React.Component {
             }}, () => this._validateField(name))
     }
 
+    _handleSubmit = (e, { error }) =>{
+        if(error) return;
+
+        const { fields } = this.state;
+        const { environment } = this.props.relay;
+
+        const user = Object.keys(fields).reduce((user, key) => {
+            user[key] = fields[key].value;
+            return user;
+        },{})
+        
+        UpdateOrCreateUserMutation.commit({
+            environment,
+            user
+        })
+
+    }
+
     _validateField(name) {
         const { fields } = this.state;
         const field = fields[name];
@@ -70,7 +109,7 @@ export class UserForm extends React.Component {
         const { fields } = this.state;
         return Object.keys(fields).map(key => {
             if(fields[key].error){
-               return <Message.Item><b>{key} :</b> {fields[key].error}</Message.Item>
+               return <Message.Item key={key}><b>{key} :</b> {fields[key].error}</Message.Item>
             }
         })
     }
@@ -80,7 +119,7 @@ export class UserForm extends React.Component {
         const errorList = this._getErrorList();
 
         return(
-            <Form error={errorList.some(e => e)}> 
+            <Form error={errorList.some(e => e)} onSubmit={this._handleSubmit}> 
                 <Header as='h2'>Create user</Header>
                 <Form.Input 
                     error={!!name.error}
@@ -118,3 +157,9 @@ export class UserForm extends React.Component {
         )
     }
 }
+
+export const UserForm = Relay.createRefetchContainer(
+    UserFormComponent,
+    USER_DATA_FRAG,
+    REFETCH_QUERY
+)

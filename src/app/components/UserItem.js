@@ -68,5 +68,5 @@ class UserItemComponent extends React.Component {
 
 export const UserItem = Relay.createFragmentContainer(
     UserItemComponent,
-  USER_ITEM_FRAG
+    USER_ITEM_FRAG
 )

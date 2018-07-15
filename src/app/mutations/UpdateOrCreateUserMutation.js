@@ -13,10 +13,10 @@ const mutation = graphql`
   }
 `;
 
-function commit(
+function commit({
   environment,
   user,
-) {
+}) {
   return commitMutation(
     environment,
     {
