@@ -31,7 +31,7 @@ class App extends Component {
                 component: <UserList userListData={props && props.viewer}/>
               }}
               form={{
-                component: <UserForm />
+                component: <UserForm user={null}/>
               }}
             />
           )

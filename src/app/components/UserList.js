@@ -7,7 +7,7 @@ import { UserItem } from '../components/';
 
 const USER_LIST_FRAG = graphql`
     fragment UserList_userListData on Viewer {
-        allUsers{
+        allUsers(first: 30, orderBy: createdAt_DESC) @connection(key: "UserList_allUsers", filters:[]){
             edges {
                 node {
                     id,

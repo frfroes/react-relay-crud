@@ -28,7 +28,7 @@ class UserFormComponent extends React.Component {
         fields:{
             email:{ value:'', isRequired: true },
             name: { value: '', isRequired: true },
-            isActive:{ value: false }
+            active:{ value: false }
         },
         formValid: false,
     }
@@ -115,7 +115,7 @@ class UserFormComponent extends React.Component {
     }
     
     render(){
-        const { email, name, isActive } = this.state.fields;
+        const { email, name, active } = this.state.fields;
         const errorList = this._getErrorList();
 
         return(
@@ -143,11 +143,11 @@ class UserFormComponent extends React.Component {
                 />
                 <Form.Checkbox 
                     toggle
-                    error={!!isActive.error}
-                    required={isActive.isRequired}
-                    name="isActive"
-                    label="isActive"
-                    checked={isActive.value}
+                    error={!!active.error}
+                    required={active.isRequired}
+                    name="active"
+                    label="active"
+                    checked={active.value}
                     onChange={this._handleToggle}
                     onBlur={this._handleBlur}
                 />
