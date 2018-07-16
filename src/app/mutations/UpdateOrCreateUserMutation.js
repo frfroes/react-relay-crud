@@ -1,5 +1,6 @@
 import { graphql, commitMutation } from 'react-relay';
-import * as mutationUtil from './util';
+
+import { MutationUtil } from './util';
 
 import { environment } from '../enviroment';
 
@@ -49,7 +50,7 @@ function commit({
         const newUser = createReport && createReport.getLinkedRecord('user');
         const viewer = proxyStore.getRoot().getLinkedRecord('viewer');
         if(newUser)
-          mutationUtil.isertEdgeBefore({
+          MutationUtil.isertEdgeBefore({
             store: proxyStore,
             node: newUser,
             edgeType: 'UserEdge',

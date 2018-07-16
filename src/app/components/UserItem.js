@@ -1,9 +1,11 @@
 import React from 'react';
 import Relay, { graphql } from 'react-relay';
+import { Card, List, Button } from 'semantic-ui-react'
 
 import moment from 'moment';
 
-import { Card, List, Button } from 'semantic-ui-react'
+import { DeleteUserMutation } from '../mutations'
+
 
 const USER_ITEM_FRAG =  graphql`
     fragment UserItem_user on User {
@@ -17,52 +19,61 @@ const USER_ITEM_FRAG =  graphql`
 `
 
 class UserItemComponent extends React.Component {
+
+    _handleDelete = () => {
+        const { user, relay } = this.props;
+        DeleteUserMutation.commit({
+            relayEnv: relay.enviroment,
+            id: user.id
+        })
+    }
   
     render() {
-    const { user } = this.props;
+        const { user } = this.props;
 
-    return (
-        <Card>
-            <Card.Content>
-                <Card.Header>{user.name}</Card.Header>
-                <Card.Meta>Created {moment(user.createdAt).fromNow()}</Card.Meta>
-                <Card.Meta>Last updated {moment(user.updatedAt).fromNow()}</Card.Meta>
-                <List>
-                    <List.Item>
-                        <List.Icon name='mail' />
-                        <List.Content>{user.email}</List.Content>
-                    </List.Item>
-                    {user.active ?( 
+        return (
+            <Card>
+                <Card.Content>
+                    <Card.Header>{user.name}</Card.Header>
+                    <Card.Meta>Created {moment(user.createdAt).fromNow()}</Card.Meta>
+                    <Card.Meta>Last updated {moment(user.updatedAt).fromNow()}</Card.Meta>
+                    <List>
                         <List.Item>
-                            <List.Icon name='check' />
-                            <List.Content>Active</List.Content>
+                            <List.Icon name='mail' />
+                            <List.Content>{user.email}</List.Content>
                         </List.Item>
-                    ):(
-                        <List.Item>
-                            <List.Icon name='close' />
-                            <List.Content>Unactive</List.Content>
-                        </List.Item>
-                    )}
-                </List>
-            </Card.Content>
-            <Card.Content extra>
-                <div className='ui two buttons'>
-                    <Button 
-                        basic 
-                        color='blue' 
-                        icon='pencil' 
-                        content='Edit'
-                    />
-                    <Button 
-                        basic 
-                        color='red' 
-                        icon='trash' 
-                        content='Delete'
-                    />
-                </div>
-            </Card.Content>
-        </Card>
-    );
+                        {user.active ?( 
+                            <List.Item>
+                                <List.Icon name='check' />
+                                <List.Content>Active</List.Content>
+                            </List.Item>
+                        ):(
+                            <List.Item>
+                                <List.Icon name='close' />
+                                <List.Content>Unactive</List.Content>
+                            </List.Item>
+                        )}
+                    </List>
+                </Card.Content>
+                <Card.Content extra>
+                    <div className='ui two buttons'>
+                        <Button 
+                            basic 
+                            color='blue' 
+                            icon='pencil' 
+                            content='Edit'
+                        />
+                        <Button 
+                            basic 
+                            color='red' 
+                            icon='trash' 
+                            content='Delete'
+                            onClick={this._handleDelete}
+                        />
+                    </div>
+                </Card.Content>
+            </Card>
+        );
   }
 }
 
