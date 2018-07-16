@@ -1,6 +1,6 @@
 import React from 'react';
 import Relay, { graphql } from 'react-relay';
-import { Message, Form, Header, Button } from 'semantic-ui-react'
+import { Message, Form, Header, Button, Segment } from 'semantic-ui-react'
 import { toast } from 'react-toastify';
 
 import { UpdateOrCreateUserMutation } from '../mutations'
@@ -60,6 +60,7 @@ export class UserForm extends React.Component {
         if(error) return;
 
         const { fields } = this.state;
+        const { userToUpdate } = this.props;
 
         const user = Object.keys(fields).reduce((user, key) => {
             user[key] = fields[key].value;
@@ -68,6 +69,7 @@ export class UserForm extends React.Component {
         
         UpdateOrCreateUserMutation.commit({
             user,
+            userId: userToUpdate && userToUpdate.id,
             onError: (error) => {
                 toast.error((
                     <div>
@@ -82,7 +84,7 @@ export class UserForm extends React.Component {
                 }, ()=> toast.info((
                     <div>
                         <h4>All good!</h4>
-                        <p>The user <b>{user.name}</b> was successfully created.</p>
+                        <p>The user <b>{user.name}</b> was successfully saved.</p>
                     </div>
                 )))
             }
@@ -146,6 +148,8 @@ export class UserForm extends React.Component {
         const { userToUpdate } = this.props;
         if (userToUpdate && userToUpdate !== prevProps.userToUpdate) {
             this._mapUserToFields(userToUpdate);
+        }else if(!userToUpdate && userToUpdate !== prevProps.userToUpdate){
+            this.setState({fields: defaultFields})
         }
     }
     
@@ -157,7 +161,7 @@ export class UserForm extends React.Component {
             <Form 
               error={errorList.some(e => e)} 
               onSubmit={this._handleSubmit}> 
-                <Header as='h2'>Create user</Header>
+                <Header as='h2'>{isUpdate? 'Update' : 'Create'} user</Header>
                 <Form.Input 
                     error={!!name.error}
                     required={name.isRequired}
@@ -191,9 +195,9 @@ export class UserForm extends React.Component {
                 { 
                   isUpdate ? 
                   (
-                    <Button.Group fluid>
-                        <Form.Button fluid primary type='submit' content="Update"/>    
-                        <Form.Button fluid type='button' content="Clear"/>
+                    <Button.Group  widths="2">
+                        <Button fluid primary type='submit' content="Update"/>    
+                        <Button fluid type='button' content="Clear" onClick={this.props.onClearUserFocus}/>
                     </Button.Group>
                   )
                   :( 

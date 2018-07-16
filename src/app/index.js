@@ -26,6 +26,12 @@ class App extends Component {
     })
   }
 
+  _handleClearUserFocus = () => {
+    this.setState({
+      userOnFocus: null
+    })
+  }
+
   render() {
     const { userOnFocus } = this.state;
     
@@ -46,7 +52,12 @@ class App extends Component {
                 )
               }}
               form={{
-                component: <UserForm userToUpdate={userOnFocus}/>
+                component: (
+                  <UserForm 
+                    userToUpdate={userOnFocus} 
+                    onClearUserFocus={this._handleClearUserFocus}
+                  />
+                )
               }}
             />
           )

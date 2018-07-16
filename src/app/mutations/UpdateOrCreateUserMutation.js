@@ -20,6 +20,7 @@ const mutation = graphql`
 function commit({
   relayEnv=environment,
   user,
+  userId,
   onError,
   onSuccess
 }) {
@@ -28,7 +29,7 @@ function commit({
     input: {
         clientMutationId: "",
         create: user,
-        update: { ...user, id: user.id || '' }
+        update: { ...user, id: userId || '' }
     },
   }
     return commitMutation(
@@ -45,7 +46,15 @@ function commit({
           onSuccess(response)
         }
       },
+      optimisticUpdater: proxxyStore => {
+        const prevUser = proxxyStore.get(userId)
+        prevUser.setValue(user.name, 'name')
+        prevUser.setValue(user.email, 'email')
+        prevUser.setValue(user.active, 'active')
+      },
       updater: proxyStore => {
+        if(userId) return;
+
         const createReport = proxyStore.getRootField('updateOrCreateUser');
         const newUser = createReport && createReport.getLinkedRecord('user');
         const viewer = proxyStore.getRoot().getLinkedRecord('viewer');
