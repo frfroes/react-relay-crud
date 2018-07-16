@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-
 import { Segment, Header, Icon, Container, Button } from 'semantic-ui-react'
+import { ToastContainer } from 'react-toastify';
 
 import { PlaceholderList } from '../../components';
 
@@ -48,6 +48,17 @@ export class Dashboard extends Component {
               {form.component}
           </div>
         </div>
+        <ToastContainer
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnVisibilityChange
+          draggable
+          pauseOnHover
+        />
       </Container>
     );
   }

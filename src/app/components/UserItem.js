@@ -4,8 +4,6 @@ import { Card, List, Button } from 'semantic-ui-react'
 
 import moment from 'moment';
 
-import { DeleteUserMutation } from '../mutations'
-
 
 const USER_ITEM_FRAG =  graphql`
     fragment UserItem_user on User {
@@ -21,11 +19,8 @@ const USER_ITEM_FRAG =  graphql`
 class UserItemComponent extends React.Component {
 
     _handleDelete = () => {
-        const { user, relay } = this.props;
-        DeleteUserMutation.commit({
-            relayEnv: relay.enviroment,
-            id: user.id
-        })
+        const { user } = this.props;
+        this.props.handleDelete(user)
     }
   
     render() {

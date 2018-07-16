@@ -8,25 +8,18 @@ const mutation = graphql`
   mutation DeleteUserMutation($input: DeleteUserInput!) {
     deleteUser(input: $input) {
       deletedId
+      user{
+        name
+      }
     }
   }
 `;
 
-// function sharedUpdater(store, user, deletedID) {
-//   const userProxy = store.get(user.id);
-//   const conn = ConnectionHandler.getConnection(
-//     userProxy,
-//     'TodoList_todos',
-//   );
-//   ConnectionHandler.deleteNode(
-//     conn,
-//     deletedID,
-//   );
-// }
-
 function commit({
   relayEnv=environment,
-  id
+  id,
+  onError,
+  onSuccess
 }) {
   const variables = {
     input: { id, clientMutationId: ''}
@@ -36,6 +29,15 @@ function commit({
     {
       mutation,
       variables: variables,
+      onError: () => onError('It seams something went wrong while deleting the user. Please, try angain later.'),
+      onCompleted: (response, errors) => {
+        const error = errors && errors.find(({path}) => path.includes('deleteUser'));
+        if(error) {
+          onError(error.message);
+        }else{
+          onSuccess(response)
+        }
+      },
       updater: (proxyStore) => {
         const deleteUser = proxyStore.getRootField('deleteUser');
         const viewer = proxyStore.getRoot().getLinkedRecord('viewer');
