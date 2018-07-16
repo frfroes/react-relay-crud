@@ -41,7 +41,7 @@ export class Dashboard extends Component {
         <div className="content">
           <div className={isFormVisible? 'hidden-mobile' : ''}>
             <Segment>
-              {data.isReady? data.component : <PlaceholderList length={3}/>}
+              {data.isReady? data.component : <PlaceholderList length={6}/>}
             </Segment>
           </div>
           <div className={!isFormVisible? 'hidden-mobile' : ''} >

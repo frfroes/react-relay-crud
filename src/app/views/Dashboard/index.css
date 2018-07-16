@@ -19,6 +19,8 @@
 
 .segment {
     height: calc(100vh - 130px);
+    overflow-x: hidden;
+    overflow-y: scroll;
 }   
 
 .dashboard > .content > div:first-child{
@@ -40,6 +42,8 @@
 
     .segment {
         height: auto;
+        overflow-x: auto;
+        overflow-y: auto;
     }
 
     .dashboard > .content > div:last-child{
