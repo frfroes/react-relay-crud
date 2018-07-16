@@ -13,14 +13,18 @@ const USER_ITEM_FRAG =  graphql`
         name
         createdAt
         updatedAt
-    }   
+    }
 `
-
 class UserItemComponent extends React.Component {
 
     _handleDelete = () => {
         const { user } = this.props;
-        this.props.handleDelete(user)
+        this.props.onDelete(user)
+    }
+
+    _handleEdit = () => {
+        const { user } = this.props;
+        this.props.onUpdate(user);
     }
   
     render() {
@@ -57,6 +61,7 @@ class UserItemComponent extends React.Component {
                             color='blue' 
                             icon='pencil' 
                             content='Edit'
+                            onClick={this._handleEdit}
                         />
                         <Button 
                             basic 

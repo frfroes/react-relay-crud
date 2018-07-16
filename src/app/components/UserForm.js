@@ -1,23 +1,18 @@
 import React from 'react';
 import Relay, { graphql } from 'react-relay';
-import { Message, Form, Header } from 'semantic-ui-react'
+import { Message, Form, Header, Button } from 'semantic-ui-react'
 import { toast } from 'react-toastify';
 
 import { UpdateOrCreateUserMutation } from '../mutations'
 
-const USER_DATA_FRAG = graphql`
-    fragment UserForm_user on User {
-        active
-        email
-        id
-        name
-    }
-`
-const REFETCH_QUERY = graphql`
-    query UserFormQuery($itemID: ID!) {
+const FETCH_USER_QUERY = graphql`
+    query UserFormQuery($userId: ID!) {
         viewer{
-            User(id: $itemID) {
-                ...UserForm_user
+            User(id: $userId) {
+                active
+                email
+                id
+                name
             }
         }
     }
@@ -28,7 +23,7 @@ const defaultFields = {
     active:{ value: false }
 }
 
-class UserFormComponent extends React.Component {
+export class UserForm extends React.Component {
 
     state = {
         fields: defaultFields,
@@ -65,7 +60,6 @@ class UserFormComponent extends React.Component {
         if(error) return;
 
         const { fields } = this.state;
-        const { environment } = this.props.relay;
 
         const user = Object.keys(fields).reduce((user, key) => {
             user[key] = fields[key].value;
@@ -73,7 +67,6 @@ class UserFormComponent extends React.Component {
         },{})
         
         UpdateOrCreateUserMutation.commit({
-            relayEnv: environment,
             user,
             onError: (error) => {
                 toast.error((
@@ -134,12 +127,32 @@ class UserFormComponent extends React.Component {
             return null;
         })
     }
+
+    _mapUserToFields(user){
+        const { fields } = this.state;
+        let newFields = {}
+        Object.keys(fields).forEach(key => {
+            newFields[key] = {
+                ...fields[key],
+                value: user[key]
+            }
+        })
+        this.setState({
+            fields: newFields
+        })
+    }
+
+    async componentDidUpdate(prevProps){
+        const { userToUpdate } = this.props;
+        if (userToUpdate && userToUpdate !== prevProps.userToUpdate) {
+            this._mapUserToFields(userToUpdate);
+        }
+    }
     
     render(){
-        const {  response } = this.state
+        const isUpdate = !!this.props.userToUpdate;
         const { email, name, active } = this.state.fields;
         const errorList = this._getErrorList();
-
         return(
             <Form 
               error={errorList.some(e => e)} 
@@ -175,15 +188,21 @@ class UserFormComponent extends React.Component {
                     onChange={this._handleToggle}
                     onBlur={this._handleBlur}
                 />
-                <Form.Button fluid positive type='submit' content="Create"/>
+                { 
+                  isUpdate ? 
+                  (
+                    <Button.Group fluid>
+                        <Form.Button fluid primary type='submit' content="Update"/>    
+                        <Form.Button fluid type='button' content="Clear"/>
+                    </Button.Group>
+                  )
+                  :( 
+                    <Form.Button fluid positive type='submit' content="Create"/>
+                  )
+                }
+
                 <Message error header='Could you check the fallowing?' list={errorList}/>
             </Form>
         )
     }
 }
-
-export const UserForm = Relay.createRefetchContainer(
-    UserFormComponent,
-    USER_DATA_FRAG,
-    REFETCH_QUERY
-)

@@ -7,31 +7,46 @@ import { Dashboard } from './views';
 import { UserList, UserForm } from './components';
 
 const APP_QUERY = graphql`
-  query appQuery {
+  query appQuery{
     viewer {
       id
       ...UserList_userListData
-    }  
-}
+    }
+  }
 `
 class App extends Component {
 
+  state={
+    userOnFocus: null
+  }
+
+  _handleUserFocus = (userOnFocus) => {
+    this.setState({
+      userOnFocus
+    })
+  }
+
   render() {
+    const { userOnFocus } = this.state;
+    
     return (
       <QueryRenderer
         environment={environment}
         query={APP_QUERY}
-        variables={{}}
-        render={({error, props}) => {
+        render={({error, props=null}) => {
           return (
             <Dashboard 
               header={{icon: 'user', label: 'User'}}
               data={{
                 isReady: props !== null,
-                component: <UserList userListData={props && props.viewer}/>
+                component: (
+                  <UserList 
+                    onUserFocus={this._handleUserFocus}
+                    userListData={props && props.viewer}/>
+                )
               }}
               form={{
-                component: <UserForm user={null}/>
+                component: <UserForm userToUpdate={userOnFocus}/>
               }}
             />
           )

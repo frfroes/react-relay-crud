@@ -60,7 +60,8 @@ class UserListComponent extends React.Component<Props> {
         <Card.Group itemsPerRow={2} stackable>
             {allUsers.edges.map( edges => 
                 <UserItem 
-                    handleDelete={this._handleConfirmDelete}
+                    onDelete={this._handleConfirmDelete}
+                    onUpdate={this.props.onUserFocus}
                     key={edges.node.id}
                     user={edges.node}/>
             )}
