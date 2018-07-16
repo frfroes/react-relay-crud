@@ -17,6 +17,8 @@ const mutation = graphql`
 function commit({
   environment,
   user,
+  onError,
+  onSuccess
 }) {
 
   const variables = {
@@ -32,20 +34,29 @@ function commit({
     {
       mutation,
       variables,
+      onError: error => onError('It seams something went wrong. Please, try angain later.'),
+      onCompleted: (response, errors) => {
+        const error = errors && errors.find(({path}) => path.includes('updateOrCreateUser'));
+        if(error) {
+          onError(error.message);
+        }else{
+          onSuccess(response)
+        }
+      },
       updater: proxyStore => {
         const createReport = proxyStore.getRootField('updateOrCreateUser');
-        const newUser = createReport.getLinkedRecord('user');
+        const newUser = createReport && createReport.getLinkedRecord('user');
         const viewer = proxyStore.getRoot().getLinkedRecord('viewer');
-
-        mutationUtil.isertEdgeBefore({
-          store: proxyStore,
-          node: newUser,
-          edgeType: 'UserEdge',
-          connection: {
-            record: viewer,
-            key: 'UserList_allUsers'
-          }
-        });
+        if(newUser)
+          mutationUtil.isertEdgeBefore({
+            store: proxyStore,
+            node: newUser,
+            edgeType: 'UserEdge',
+            connection: {
+              record: viewer,
+              key: 'UserList_allUsers'
+            }
+          });
       }
     }
   );

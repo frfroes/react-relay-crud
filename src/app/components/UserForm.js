@@ -21,16 +21,17 @@ const REFETCH_QUERY = graphql`
         }
     }
 `
+const defaultFields = {
+    email:{ value:'', isRequired: true },
+    name: { value: '', isRequired: true },
+    active:{ value: false }
+}
 
 class UserFormComponent extends React.Component {
 
     state = {
-        fields:{
-            email:{ value:'', isRequired: true },
-            name: { value: '', isRequired: true },
-            active:{ value: false }
-        },
-        formValid: false,
+        fields: defaultFields,
+        response: {}
     }
 
     _handleChange = (e, { name, value }) => {
@@ -73,7 +74,19 @@ class UserFormComponent extends React.Component {
         
         UpdateOrCreateUserMutation.commit({
             environment,
-            user
+            user,
+            onError: (error) => {
+                this.setState({response: { error: error }});
+            },
+            onSuccess: ({updateOrCreateUser: { user } }) => {
+                console.log(user)
+                this.setState({
+                    fields: defaultFields,
+                    response:{ 
+                        success: (<p>The user <b>{user.name}</b> was successfully created.</p>)
+                    }
+                })
+            }
         })
 
     }
@@ -101,7 +114,8 @@ class UserFormComponent extends React.Component {
                 fields:{
                     ...fields,
                     [name]: {...field, error}
-                }
+                },
+                response: {}
             });
     }
 
@@ -111,15 +125,21 @@ class UserFormComponent extends React.Component {
             if(fields[key].error){
                return <Message.Item key={key}><b>{key} :</b> {fields[key].error}</Message.Item>
             }
+            return null;
         })
     }
     
     render(){
+        const {  response } = this.state
         const { email, name, active } = this.state.fields;
         const errorList = this._getErrorList();
 
         return(
-            <Form error={errorList.some(e => e)} onSubmit={this._handleSubmit}> 
+            <Form 
+              error={!!response.error}
+              success={!!response.success}
+              warning={errorList.some(e => e)} 
+              onSubmit={this._handleSubmit}> 
                 <Header as='h2'>Create user</Header>
                 <Form.Input 
                     error={!!name.error}
@@ -152,7 +172,9 @@ class UserFormComponent extends React.Component {
                     onBlur={this._handleBlur}
                 />
                 <Form.Button fluid positive type='submit' content="Create"/>
-                <Message error header='Could you check the fallowing?' list={errorList}/> 
+                <Message warning header='Could you check the fallowing?' list={errorList}/>
+                <Message error header='Ops, something went wrong' content={response.error}/>
+                <Message success header='All good!' content={response.success}/>
             </Form>
         )
     }
