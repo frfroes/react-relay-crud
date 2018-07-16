@@ -73,13 +73,12 @@ class UserFormComponent extends React.Component {
         },{})
         
         UpdateOrCreateUserMutation.commit({
-            environment,
+            relayEnv:environment,
             user,
             onError: (error) => {
                 this.setState({response: { error: error }});
             },
             onSuccess: ({updateOrCreateUser: { user } }) => {
-                console.log(user)
                 this.setState({
                     fields: defaultFields,
                     response:{ 

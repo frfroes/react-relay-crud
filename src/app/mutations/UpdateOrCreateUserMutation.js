@@ -1,6 +1,8 @@
 import { graphql, commitMutation } from 'react-relay';
 import * as mutationUtil from './util';
 
+import { environment } from '../enviroment';
+
 const mutation = graphql`
   mutation UpdateOrCreateUserMutation($input: UpdateOrCreateUserInput!) {
     updateOrCreateUser(input: $input) {
@@ -15,7 +17,7 @@ const mutation = graphql`
 `;
 
 function commit({
-  environment,
+  relayEnv=environment,
   user,
   onError,
   onSuccess
@@ -28,9 +30,8 @@ function commit({
         update: { ...user, id: user.id || '' }
     },
   }
-  
-  return commitMutation(
-    environment,
+    return commitMutation(
+    relayEnv,
     {
       mutation,
       variables,
