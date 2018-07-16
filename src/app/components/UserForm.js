@@ -152,7 +152,7 @@ class UserFormComponent extends React.Component {
                     onBlur={this._handleBlur}
                 />
                 <Form.Button fluid positive type='submit' content="Create"/>
-                <Message error header='Could you check something?' list={errorList}/> 
+                <Message error header='Could you check the fallowing?' list={errorList}/> 
             </Form>
         )
     }
