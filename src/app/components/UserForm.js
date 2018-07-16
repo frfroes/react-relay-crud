@@ -1,6 +1,7 @@
 import React from 'react';
 import Relay, { graphql } from 'react-relay';
 import { Message, Form, Header } from 'semantic-ui-react'
+import { toast } from 'react-toastify';
 
 import { UpdateOrCreateUserMutation } from '../mutations'
 
@@ -31,7 +32,6 @@ class UserFormComponent extends React.Component {
 
     state = {
         fields: defaultFields,
-        response: {}
     }
 
     _handleChange = (e, { name, value }) => {
@@ -76,15 +76,22 @@ class UserFormComponent extends React.Component {
             relayEnv: environment,
             user,
             onError: (error) => {
-                this.setState({response: { error: error }});
+                toast.error((
+                    <div>
+                        <h4>Ops, something went wrong</h4>
+                        <p>{error}</p>
+                    </div>
+                ))
             },
             onSuccess: ({updateOrCreateUser: { user } }) => {
                 this.setState({
-                    fields: defaultFields,
-                    response:{ 
-                        success: (<p>The user <b>{user.name}</b> was successfully created.</p>)
-                    }
-                })
+                    fields: defaultFields
+                }, ()=> toast.info((
+                    <div>
+                        <h4>All good!</h4>
+                        <p>The user <b>{user.name}</b> was successfully created.</p>
+                    </div>
+                )))
             }
         })
 
@@ -135,9 +142,7 @@ class UserFormComponent extends React.Component {
 
         return(
             <Form 
-              error={!!response.error}
-              success={!!response.success}
-              warning={errorList.some(e => e)} 
+              error={errorList.some(e => e)} 
               onSubmit={this._handleSubmit}> 
                 <Header as='h2'>Create user</Header>
                 <Form.Input 
@@ -171,9 +176,7 @@ class UserFormComponent extends React.Component {
                     onBlur={this._handleBlur}
                 />
                 <Form.Button fluid positive type='submit' content="Create"/>
-                <Message warning header='Could you check the fallowing?' list={errorList}/>
-                <Message error header='Ops, something went wrong' content={response.error}/>
-                <Message success header='All good!' content={response.success}/>
+                <Message error header='Could you check the fallowing?' list={errorList}/>
             </Form>
         )
     }
