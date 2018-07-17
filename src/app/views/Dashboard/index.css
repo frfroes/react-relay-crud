@@ -17,10 +17,13 @@
     justify-content: space-between;
 }
 
-.segment {
+.ui.segment {
     height: calc(100vh - 130px);
     overflow-x: hidden;
     overflow-y: scroll;
+    margin-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }   
 
 .dashboard > .content > div:first-child{

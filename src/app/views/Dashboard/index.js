@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Segment, Header, Icon, Container, Button } from 'semantic-ui-react'
+import { Segment, Header, Icon, Container, Button, Menu, Checkbox } from 'semantic-ui-react'
 import { ToastContainer } from 'react-toastify';
 
 import { PlaceholderList } from '../../components';
@@ -33,6 +33,11 @@ export class Dashboard extends Component {
         </Header>
         <div className="content">
           <div className={isFormVisible? 'hidden-mobile' : ''}>
+            <Menu attached="top">
+              <Menu.Item>
+                <Checkbox toggle label="Only active?"/>
+              </Menu.Item>
+            </Menu>
             <Segment>
               {data.isReady? data.component : <PlaceholderList length={6}/>}
             </Segment>

@@ -66,6 +66,9 @@ export class UserForm extends React.Component {
                 ))
             },
             onSuccess: ({updateOrCreateUser: { user } }) => {
+                this.setState({
+                    fields: defaultFields
+                })
                 this.props.onClearUserFocus();
                 toast.info((
                     <div>
@@ -135,8 +138,6 @@ export class UserForm extends React.Component {
         const { userToUpdate } = this.props;
         if (userToUpdate && userToUpdate !== prevProps.userToUpdate) {
             this._mapUserToFields(userToUpdate);
-        }else if(!userToUpdate && userToUpdate !== prevProps.userToUpdate){
-            this.setState({fields: defaultFields})
         }
     }
     

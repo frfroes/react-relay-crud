@@ -9,7 +9,10 @@ import { DeleteUserMutation } from '../mutations'
 
 const USER_LIST_FRAG = graphql`
     fragment UserList_userListData on Viewer {
-        allUsers(first: 30, orderBy: createdAt_DESC) @connection(key: "UserList_allUsers", filters:[]){
+        allUsers(
+            first: 30, 
+            orderBy: createdAt_DESC
+        ) @connection(key: "UserList_allUsers", filters:[]){
             edges {
                 node {
                     id,
@@ -58,12 +61,12 @@ class UserListComponent extends React.Component<Props> {
 
     return (
         <Card.Group itemsPerRow={2} stackable>
-            {allUsers.edges.map( edges => 
-                <UserItem 
+            {allUsers.edges.map( edge => 
+                <UserItem
                     onDelete={this._handleConfirmDelete}
                     onUpdate={this.props.onUserFocus}
-                    key={edges.node.id}
-                    user={edges.node}/>
+                    key={edge.id}
+                    user={edge.node}/>
             )}
             <Confirm 
                 size="tiny"

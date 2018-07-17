@@ -2,7 +2,7 @@ import { ConnectionHandler } from 'relay-runtime';
 
 export const MutationUtil = {
 
-    isertEdgeBefore({
+    insertEdgeBefore({
         store, 
         node,
         edgeType,
@@ -31,5 +31,12 @@ export const MutationUtil = {
             connection,
             deletedId,
         );
+    },
+
+    mapObjectToRecordProxy({object, record}){
+        Object.keys(object).forEach(key => {
+            record.setValue(object[key], key);
+        })
+        return record;
     }
 }

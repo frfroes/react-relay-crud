@@ -18,6 +18,8 @@ const mutation = graphql`
   }
 `;
 
+let tempID = 0;
+
 function commit({
   relayEnv=environment,
   user,
@@ -47,21 +49,51 @@ function commit({
           onSuccess(response)
         }
       },
-      optimisticUpdater: proxxyStore => {
-        const prevUser = proxxyStore.get(userId)
-        prevUser.setValue(user.name, 'name')
-        prevUser.setValue(user.email, 'email')
-        prevUser.setValue(user.active, 'active')
-        prevUser.setValue(new Date().toISOString(), 'updatedAt')
+      optimisticUpdater: proxyStore => {
+        const now = new Date().toISOString();
+
+        if(userId){
+          const prevUser = proxyStore.get(userId)
+          MutationUtil.mapObjectToRecordProxy({
+            object: { 
+              ...user, updatedAt: now
+            },
+            record: prevUser
+          })
+        }else{
+          const id = 'client:newUser:' + tempID++;
+          let newUser = proxyStore.create(id, 'User');
+          const viewer = proxyStore.getRoot().getLinkedRecord('viewer');
+          newUser = MutationUtil.mapObjectToRecordProxy({
+            object: { 
+              ...user, createdAt: now, updatedAt: now
+            },
+            record: newUser
+          })
+          const newEdge = proxyStore.create(
+            'client:newEdge:' + tempID++,
+            'UserEdge',
+          );
+          newEdge.setLinkedRecord(newUser, 'user')
+          MutationUtil.insertEdgeBefore({
+            store: proxyStore,
+            node: newUser,
+            edgeType: 'UserEdge',
+            connection: {
+              record: viewer,
+              key: 'UserList_allUsers'
+            }
+          });
+        }
       },
       updater: proxyStore => {
-        if(userId) return;
+        if(userId) return; // Relay handles update existing edge by itself
 
         const createReport = proxyStore.getRootField('updateOrCreateUser');
         const newUser = createReport && createReport.getLinkedRecord('user');
         const viewer = proxyStore.getRoot().getLinkedRecord('viewer');
         if(newUser)
-          MutationUtil.isertEdgeBefore({
+          MutationUtil.insertEdgeBefore({
             store: proxyStore,
             node: newUser,
             edgeType: 'UserEdge',
