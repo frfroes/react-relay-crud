@@ -79,14 +79,13 @@ export class UserForm extends React.Component {
                 ))
             },
             onSuccess: ({updateOrCreateUser: { user } }) => {
-                this.setState({
-                    fields: defaultFields
-                }, ()=> toast.info((
+                this.props.onClearUserFocus();
+                toast.info((
                     <div>
                         <h4>All good!</h4>
                         <p>The user <b>{user.name}</b> was successfully saved.</p>
                     </div>
-                )))
+                ))
             }
         })
 
@@ -136,7 +135,8 @@ export class UserForm extends React.Component {
         Object.keys(fields).forEach(key => {
             newFields[key] = {
                 ...fields[key],
-                value: user[key]
+                value: user[key],
+                error: ''
             }
         })
         this.setState({

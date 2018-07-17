@@ -12,6 +12,7 @@ const mutation = graphql`
         name
         email
         active
+        updatedAt
       }
     }
   }
@@ -51,6 +52,7 @@ function commit({
         prevUser.setValue(user.name, 'name')
         prevUser.setValue(user.email, 'email')
         prevUser.setValue(user.active, 'active')
+        prevUser.setValue(new Date().toISOString(), 'updatedAt')
       },
       updater: proxyStore => {
         if(userId) return;
