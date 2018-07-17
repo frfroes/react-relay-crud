@@ -132,7 +132,6 @@ export const UserList = Relay.createPaginationContainer(
           return props.userListData && props.userListData.allUsers
         },
         getFragmentVariables(previousVariables, totalCount) {
-          console.log(previousVariables)
           return {
             ...previousVariables,
             count: totalCount,

@@ -6,7 +6,7 @@ import { environment } from './enviroment';
 import { Dashboard } from './views';
 import { UserList, UserForm } from './components';
 
-import { ITENS_PER_PAGE } from './constants';
+import { ITEMS_PER_PAGE } from './constants';
 
 const APP_QUERY = graphql`
   query appQuery(
@@ -66,7 +66,7 @@ class App extends Component {
         query={APP_QUERY}
         variables={{
           userFilter,
-          count: ITENS_PER_PAGE
+          count: ITEMS_PER_PAGE
         }}
         render={({error, props}) => {
           return (
