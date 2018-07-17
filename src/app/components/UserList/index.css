@@ -1,0 +1,11 @@
+.cards > .ui.header {
+    text-align: center;
+    margin: 30px 15px;
+    width: 100%;
+}
+
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+    .cards > .ui.header{
+        width: auto;
+    }
+}
