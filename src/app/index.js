@@ -78,11 +78,3 @@ class App extends Component {
 }
 
 export default App;
-
-// if (error) {
-//   return <div>Error!</div>;
-// }
-// if (!props) {
-//   return <div>Loading...</div>;
-// }
-// return <div>User ID: {props.viewer.id}</div>;

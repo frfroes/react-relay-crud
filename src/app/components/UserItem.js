@@ -60,7 +60,7 @@ class UserItemComponent extends React.Component {
                             basic 
                             color='blue' 
                             icon='pencil' 
-                            content='Edit'
+                            content='Update'
                             onClick={this._handleEdit}
                         />
                         <Button 
