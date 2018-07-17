@@ -72,7 +72,7 @@ class UserListComponent extends React.Component<Props> {
                         key={edge.node.id}
                         user={edge.node}/>
             )):(
-                <Header  content="It seams you don't have create any users yet." />
+                <Header  content="It seams you don't have created any users yet." />
                )
             }
             <Confirm 
