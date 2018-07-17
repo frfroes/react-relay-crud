@@ -10,11 +10,11 @@ import { GRAPHQL_ENDPOINT } from './constants';
 function fetchQuery(
     operation,
     variables,
-) {
+) {   
 return fetch(GRAPHQL_ENDPOINT, {
     method: 'POST',
     headers: {
-    'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
     },
     body: JSON.stringify({
     query: operation.text,

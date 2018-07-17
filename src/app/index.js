@@ -6,8 +6,14 @@ import { environment } from './enviroment';
 import { Dashboard } from './views';
 import { UserList, UserForm } from './components';
 
+import { ITENS_PER_PAGE } from './constants';
+
 const APP_QUERY = graphql`
-  query appQuery($userFilter: UserFilter){
+  query appQuery(
+    $userFilter: UserFilter,
+    $count: Int!,
+    $after: String
+  ){
     viewer {
       id
       ...UserList_userListData
@@ -59,7 +65,8 @@ class App extends Component {
         environment={environment}
         query={APP_QUERY}
         variables={{
-          userFilter
+          userFilter,
+          count: ITENS_PER_PAGE
         }}
         render={({error, props}) => {
           return (

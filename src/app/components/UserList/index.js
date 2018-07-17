@@ -7,26 +7,45 @@ import { UserItem } from '../../components/';
 
 import { DeleteUserMutation } from '../../mutations'
 
+import { ITEMS_PER_PAGE } from '../../constants';
+
 import './index.css'
 
 const USER_LIST_FRAG = graphql`
     fragment UserList_userListData on Viewer {
         allUsers(
-            first: 6, 
+            first: $count, 
+            after: $after,
             orderBy: createdAt_DESC
             filter: $userFilter
-        ) @connection(key: "UserList_allUsers", filters:[]){
+        ) @connection(key: "UserList_allUsers"){
             edges {
+                cursor
                 node {
                     id,
                     ...UserItem_user,
                 }
             }
+            pageInfo {
+                hasNextPage
+                endCursor
+            }
         }
         id
     }
 `
-
+const USER_LIST_FOWARD_QUERY = graphql`
+    query UserListForwardQuery(
+        $count: Int!,
+        $after: String,
+        $userFilter: UserFilter
+    ) {
+        viewer {
+            id
+            ...UserList_userListData
+        }
+    }
+`
 class UserListComponent extends React.Component<Props> {
 
     state = {
@@ -38,8 +57,10 @@ class UserListComponent extends React.Component<Props> {
     }
 
     _handleItemDelete = () => {
+        
         const { relay } = this.props;
         const { userToDelete } = this.state;
+
         DeleteUserMutation.commit({
             relayEnv: relay.enviroment,
             id: userToDelete.id,
@@ -58,8 +79,12 @@ class UserListComponent extends React.Component<Props> {
         this.setState({ userToDelete: null })
     }
 
+    _loadMore = () => {     
+        this.props.relay.loadMore(ITEMS_PER_PAGE)
+    }
+
     render() {
-    const { userListData: { allUsers } } = this.props;
+    const { userListData: { allUsers }, relay } = this.props;
     const { userToDelete } = this.state;
 
     return (
@@ -83,10 +108,13 @@ class UserListComponent extends React.Component<Props> {
                 onConfirm={this._handleItemDelete} 
             />
             <Button
-                fluid 
-                basic 
-                secondary 
-                content="Load more"
+                fluid
+                basic
+                disabled={!relay.hasMore()}
+                loading={relay.isLoading()}
+                secondary
+                content={relay.hasMore() ? 'Load more' : 'Nothing more to load'}
+                onClick={() => {relay.loadMore(ITEMS_PER_PAGE)}} 
             />
         </Card.Group>
         
@@ -94,7 +122,28 @@ class UserListComponent extends React.Component<Props> {
     }
 }
 
-export const UserList = Relay.createFragmentContainer(
+export const UserList = Relay.createPaginationContainer(
     UserListComponent,
-    USER_LIST_FRAG
+    USER_LIST_FRAG,
+    {
+        direction: 'forward',
+        query: USER_LIST_FOWARD_QUERY,
+        getConnectionFromProps(props) {
+          return props.userListData && props.userListData.allUsers
+        },
+        getFragmentVariables(previousVariables, totalCount) {
+          console.log(previousVariables)
+          return {
+            ...previousVariables,
+            count: totalCount,
+          }
+        },
+        getVariables(props, { count, after }, fragmentVariables) {
+
+          return {
+            count,
+            after
+          }
+        },
+    }
 );
