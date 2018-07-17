@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Segment, Header, Icon, Container, Button, Menu, Checkbox } from 'semantic-ui-react'
+import { Segment, Header, Icon, Container, Button, Menu, Dropdown } from 'semantic-ui-react'
 import { ToastContainer } from 'react-toastify';
 
 import { PlaceholderList } from '../../components';
@@ -7,15 +7,19 @@ import { PlaceholderList } from '../../components';
 import './index.css'
 
 export class Dashboard extends Component {
-
-  state = {
-    isFormVisible: false,
-  }
   
+  _handleActiveFilterChange = (e , { value }) => {
+    const active = value !== 0 ? value : undefined;
+    this.props.onChangeFilter({ active })
+  }
+
+
   render() {
     
-    const { header, data, form, isFormVisible } = this.props;
+    const { header, data, form, isFormVisible, filter } = this.props;
     const arrowPosition = isFormVisible ? 'left' : 'right';
+
+    const activeFilter = filter.active === undefined ? 0 : filter.active;
 
     return (
       <Container className="dashboard">
@@ -34,9 +38,16 @@ export class Dashboard extends Component {
         <div className="content">
           <div className={isFormVisible? 'hidden-mobile' : ''}>
             <Menu attached="top">
-              <Menu.Item>
-                <Checkbox toggle label="Only active?"/>
-              </Menu.Item>
+            <Dropdown  
+              item
+              value={activeFilter}
+              options={[
+                { text: 'All', value: 0 },
+                { text: 'Only active', value: true },
+                { text: 'Only unactive', value: false }
+              ]}
+              onChange={this._handleActiveFilterChange}
+            />
             </Menu>
             <Segment>
               {data.isReady? data.component : <PlaceholderList length={6}/>}

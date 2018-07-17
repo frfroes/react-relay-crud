@@ -7,7 +7,7 @@ import { Dashboard } from './views';
 import { UserList, UserForm } from './components';
 
 const APP_QUERY = graphql`
-  query appQuery{
+  query appQuery($userFilter: UserFilter){
     viewer {
       id
       ...UserList_userListData
@@ -18,7 +18,8 @@ class App extends Component {
 
   state={
     userOnFocus: null,
-    isFormVisible: false
+    isFormVisible: false,
+    userFilter: {}
   }
 
   _toogleFormVisible = () => {
@@ -40,18 +41,33 @@ class App extends Component {
     })
   }
 
+  _handleChangeUserFilter = (criterias) => {
+    const { userFilter } = this.state;
+    this.setState({
+      userFilter:{
+        ...userFilter,
+        ...criterias
+      }
+    })
+  }
+
   render() {
-    const { userOnFocus, isFormVisible } = this.state;
+    const { userOnFocus, isFormVisible, userFilter } = this.state;
     
     return (
       <QueryRenderer
         environment={environment}
         query={APP_QUERY}
-        render={({error, props=null}) => {
+        variables={{
+          userFilter
+        }}
+        render={({error, props}) => {
           return (
             <Dashboard 
               isFormVisible={isFormVisible}
               onToogleFormVisible={this._toogleFormVisible}
+              onChangeFilter={this._handleChangeUserFilter}
+              filter={userFilter}
               header={{icon: 'user', label: 'User'}}
               data={{
                 isReady: props !== null,

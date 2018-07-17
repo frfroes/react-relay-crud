@@ -12,6 +12,7 @@ const USER_LIST_FRAG = graphql`
         allUsers(
             first: 30, 
             orderBy: createdAt_DESC
+            filter: $userFilter
         ) @connection(key: "UserList_allUsers", filters:[]){
             edges {
                 node {
