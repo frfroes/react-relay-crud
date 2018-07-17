@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Segment, Header, Icon, Container, Button, Menu, Dropdown } from 'semantic-ui-react'
+import { Segment, Header, Icon, Container, Button, Menu, Dropdown, Input } from 'semantic-ui-react'
 import { ToastContainer } from 'react-toastify';
 
 import { PlaceholderList } from '../../components';
@@ -13,6 +13,16 @@ export class Dashboard extends Component {
     this.props.onChangeFilter({ active })
   }
 
+  _handleEmailorNameFilterChange = (e , { value }) => {
+    if(value && value.length >= 3){
+      this.props.onChangeFilter({ OR: [
+       { email_contains: value },
+       { name_contains: value }
+      ]})
+    }else if(this.props.filter.OR){
+      this.props.onChangeFilter({ OR: undefined })
+    }
+  }
 
   render() {
     
@@ -38,16 +48,25 @@ export class Dashboard extends Component {
         <div className="content">
           <div className={isFormVisible? 'hidden-mobile' : ''}>
             <Menu attached="top">
-            <Dropdown  
-              item
-              value={activeFilter}
-              options={[
-                { text: 'All', value: 0 },
-                { text: 'Only active', value: true },
-                { text: 'Only unactive', value: false }
-              ]}
-              onChange={this._handleActiveFilterChange}
-            />
+              <Dropdown  
+                item
+                value={activeFilter}
+                options={[
+                  { text: 'All', value: 0 },
+                  { text: 'Only active', value: true },
+                  { text: 'Only unactive', value: false }
+                ]}
+                onChange={this._handleActiveFilterChange}
+              />
+              <Menu.Menu position='right'>
+                <Menu.Item>
+                  <Input 
+                    icon='search' 
+                    placeholder='Filter by name or email' 
+                    onChange={this._handleEmailorNameFilterChange}
+                  />
+                </Menu.Item>
+              </Menu.Menu>
             </Menu>
             <Segment>
               {data.isReady? data.component : <PlaceholderList length={6}/>}
