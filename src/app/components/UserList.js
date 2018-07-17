@@ -65,7 +65,7 @@ class UserListComponent extends React.Component<Props> {
                 <UserItem
                     onDelete={this._handleConfirmDelete}
                     onUpdate={this.props.onUserFocus}
-                    key={edge.id}
+                    key={edge.node.id}
                     user={edge.node}/>
             )}
             <Confirm 
