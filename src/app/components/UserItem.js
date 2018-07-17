@@ -28,10 +28,10 @@ class UserItemComponent extends React.Component {
     }
   
     render() {
-        const { user, key } = this.props;
+        const { user } = this.props;
 
         return (
-            <Card key={key}>
+            <Card>
                 <Card.Content>
                     <Card.Header>{user.name}</Card.Header>
                     <Card.Meta>Created {moment(user.createdAt).fromNow()}</Card.Meta>
