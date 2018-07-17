@@ -1,16 +1,18 @@
 import React from 'react';
 import Relay, { graphql } from 'react-relay';
-import { Card, Confirm } from 'semantic-ui-react'
+import { Card, Confirm, Button } from 'semantic-ui-react'
 import { toast } from 'react-toastify';
 
-import { UserItem } from '../components/';
+import { UserItem } from '../../components/';
 
-import { DeleteUserMutation } from '../mutations'
+import { DeleteUserMutation } from '../../mutations'
+
+import './index.css'
 
 const USER_LIST_FRAG = graphql`
     fragment UserList_userListData on Viewer {
         allUsers(
-            first: 30, 
+            first: 6, 
             orderBy: createdAt_DESC
             filter: $userFilter
         ) @connection(key: "UserList_allUsers", filters:[]){
@@ -79,6 +81,12 @@ class UserListComponent extends React.Component<Props> {
                 open={!!userToDelete} 
                 onCancel={this._handleCancelDelete} 
                 onConfirm={this._handleItemDelete} 
+            />
+            <Button
+                fluid 
+                basic 
+                secondary 
+                content="Load more"
             />
         </Card.Group>
         
