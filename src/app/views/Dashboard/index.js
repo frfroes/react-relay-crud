@@ -11,17 +11,10 @@ export class Dashboard extends Component {
   state = {
     isFormVisible: false,
   }
-
-  _toogleFormVisible = () => {
-    this.setState({
-      isFormVisible: !this.state.isFormVisible
-    })
-  }
   
   render() {
     
-    const { header, data, form } = this.props;
-    const { isFormVisible } = this.state;
+    const { header, data, form, isFormVisible } = this.props;
     const arrowPosition = isFormVisible ? 'left' : 'right';
 
     return (
@@ -35,7 +28,7 @@ export class Dashboard extends Component {
             size="small" 
             content={isFormVisible? `${header.label} list` : `Create ${header.label}`}
             icon={`${arrowPosition} arrow`} labelPosition={arrowPosition}
-            onClick={this._toogleFormVisible}
+            onClick={this.props.onToogleFormVisible}
           />
         </Header>
         <div className="content">

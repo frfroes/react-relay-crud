@@ -1,22 +1,9 @@
 import React from 'react';
-import Relay, { graphql } from 'react-relay';
-import { Message, Form, Header, Button, Segment } from 'semantic-ui-react'
+import { Message, Form, Header, Button } from 'semantic-ui-react'
 import { toast } from 'react-toastify';
 
 import { UpdateOrCreateUserMutation } from '../mutations'
 
-const FETCH_USER_QUERY = graphql`
-    query UserFormQuery($userId: ID!) {
-        viewer{
-            User(id: $userId) {
-                active
-                email
-                id
-                name
-            }
-        }
-    }
-`
 const defaultFields = {
     email:{ value:'', isRequired: true },
     name: { value: '', isRequired: true },

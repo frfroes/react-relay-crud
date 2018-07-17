@@ -17,12 +17,20 @@ const APP_QUERY = graphql`
 class App extends Component {
 
   state={
-    userOnFocus: null
+    userOnFocus: null,
+    isFormVisible: false
+  }
+
+  _toogleFormVisible = () => {
+    this.setState({
+      isFormVisible: !this.state.isFormVisible
+    })
   }
 
   _handleUserFocus = (userOnFocus) => {
     this.setState({
-      userOnFocus
+      userOnFocus,
+      isFormVisible: true
     })
   }
 
@@ -33,7 +41,7 @@ class App extends Component {
   }
 
   render() {
-    const { userOnFocus } = this.state;
+    const { userOnFocus, isFormVisible } = this.state;
     
     return (
       <QueryRenderer
@@ -42,6 +50,8 @@ class App extends Component {
         render={({error, props=null}) => {
           return (
             <Dashboard 
+              isFormVisible={isFormVisible}
+              onToogleFormVisible={this._toogleFormVisible}
               header={{icon: 'user', label: 'User'}}
               data={{
                 isReady: props !== null,
