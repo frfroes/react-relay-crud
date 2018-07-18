@@ -18,7 +18,7 @@ const USER_LIST_FRAG = graphql`
             after: $cursor,
             orderBy: createdAt_DESC
             filter: $userFilter
-        ) @connection(key: "UserList_allUsers"){
+        ) @connection(key: "UserList_allUsers",  filters:[]){
             edges {
                 cursor
                 node {
