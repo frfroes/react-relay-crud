@@ -15,7 +15,7 @@ const USER_LIST_FRAG = graphql`
     fragment UserList_userListData on Viewer {
         allUsers(
             first: $count, 
-            after: $after,
+            after: $cursor,
             orderBy: createdAt_DESC
             filter: $userFilter
         ) @connection(key: "UserList_allUsers"){
@@ -37,7 +37,7 @@ const USER_LIST_FRAG = graphql`
 const USER_LIST_FOWARD_QUERY = graphql`
     query UserListForwardQuery(
         $count: Int!,
-        $after: String,
+        $cursor: String,
         $userFilter: UserFilter
     ) {
         viewer {
@@ -49,7 +49,8 @@ const USER_LIST_FOWARD_QUERY = graphql`
 class UserListComponent extends React.Component<Props> {
 
     state = {
-        userToDelete: null
+        userToDelete: null,
+        isLoading: false // Workaround for this issue: https://github.com/facebook/relay/issues/1973
     }
 
     _handleConfirmDelete = (user) => {
@@ -79,13 +80,15 @@ class UserListComponent extends React.Component<Props> {
         this.setState({ userToDelete: null })
     }
 
-    _loadMore = () => {     
-        this.props.relay.loadMore(ITEMS_PER_PAGE)
+    _handleLoadMore = () => {
+        const { relay } = this.props;
+        this.setState({ isLoadingMore: true }); 
+        relay.loadMore(ITEMS_PER_PAGE, () => this.setState({ isLoadingMore: false }))
     }
 
     render() {
     const { userListData: { allUsers }, relay } = this.props;
-    const { userToDelete } = this.state;
+    const { userToDelete, isLoadingMore } = this.state;
 
     return (
         <Card.Group itemsPerRow={2} stackable>
@@ -115,10 +118,10 @@ class UserListComponent extends React.Component<Props> {
                 fluid
                 basic
                 disabled={!relay.hasMore()}
-                loading={relay.isLoading()}
+                loading={isLoadingMore}
                 secondary
                 content={relay.hasMore() ? 'Load more' : 'Nothing more to load'}
-                onClick={() => {relay.loadMore(ITEMS_PER_PAGE)}} 
+                onClick={this._handleLoadMore} 
             />
         </Card.Group>
         
@@ -132,20 +135,12 @@ export const UserList = Relay.createPaginationContainer(
     {
         direction: 'forward',
         query: USER_LIST_FOWARD_QUERY,
-        getConnectionFromProps(props) {
-          return props.userListData && props.userListData.allUsers
-        },
-        getFragmentVariables(previousVariables, totalCount) {
-          return {
-            ...previousVariables,
-            count: totalCount,
-          }
-        },
-        getVariables(props, { count, after }, fragmentVariables) {
-
+        getVariables(props, { count, cursor }, fragmentVariables) {
+            const { userFilter } = fragmentVariables
           return {
             count,
-            after
+            cursor,
+            userFilter
           }
         },
     }

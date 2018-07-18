@@ -12,7 +12,7 @@ const APP_QUERY = graphql`
   query appQuery(
     $userFilter: UserFilter,
     $count: Int!,
-    $after: String
+    $cursor: String
   ){
     viewer {
       id
@@ -66,7 +66,7 @@ class App extends Component {
         query={APP_QUERY}
         variables={{
           userFilter,
-          count: ITEMS_PER_PAGE
+          count: ITEMS_PER_PAGE,
         }}
         render={({error, props}) => {
           return (
