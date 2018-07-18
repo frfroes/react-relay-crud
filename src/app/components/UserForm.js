@@ -57,7 +57,17 @@ export class UserForm extends React.Component {
         UpdateOrCreateUserMutation.commit({
             user,
             userId: userToUpdate && userToUpdate.id,
-            onError: (error) => {
+            onError: (error, failedData) => {
+                const { user, userId } = failedData;
+                
+                this._mapUserToFields(user);
+                if(userId){
+                    this.props.onUserFocus({
+                        ...user,
+                        id: userId
+                    })
+                }
+
                 toast.error((
                     <div>
                         <h4>Ops, something went wrong</h4>
@@ -66,10 +76,6 @@ export class UserForm extends React.Component {
                 ))
             },
             onSuccess: ({updateOrCreateUser: { user } }) => {
-                this.setState({
-                    fields: defaultFields
-                })
-                this.props.onClearUserFocus();
                 toast.info((
                     <div>
                         <h4>All good!</h4>
@@ -78,7 +84,10 @@ export class UserForm extends React.Component {
                 ))
             }
         })
-
+        this.setState({
+            fields: defaultFields
+        })
+        this.props.onClearUserFocus();
     }
 
     _validateField(name) {

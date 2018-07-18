@@ -40,11 +40,13 @@ function commit({
     {
       mutation,
       variables,
-      onError: error => onError('It seams something went wrong. Please, try angain later.'),
+      onError: error => {
+        onError('It seams something went wrong. Please, try angain later.', { user, userId })
+      },
       onCompleted: (response, errors) => {
         const error = errors && errors.find(({path}) => path.includes('updateOrCreateUser'));
         if(error) {
-          onError(error.message);
+          onError(error.message, { user, userId });
         }else{
           onSuccess(response)
         }

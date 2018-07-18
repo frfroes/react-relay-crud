@@ -88,6 +88,7 @@ class App extends Component {
                 component: (
                   <UserForm 
                     userToUpdate={userOnFocus} 
+                    onUserFocus={this._handleUserFocus}
                     onClearUserFocus={this._handleClearUserFocus}
                   />
                 )
