@@ -1,6 +1,6 @@
 import React from 'react';
 import Relay, { graphql } from 'react-relay';
-import { Card, Confirm, Button } from 'semantic-ui-react'
+import { Card, Confirm, Button, Header } from 'semantic-ui-react'
 import { toast } from 'react-toastify';
 
 import { UserItem } from '../../components/';
@@ -89,13 +89,17 @@ class UserListComponent extends React.Component<Props> {
 
     return (
         <Card.Group itemsPerRow={2} stackable>
-            {allUsers.edges.map( edge => 
-                <UserItem
-                    onDelete={this._handleConfirmDelete}
-                    onUpdate={this.props.onUserFocus}
-                    key={edge.node.id}
-                    user={edge.node}/>
-            )}
+            {allUsers.edges.length?(
+                allUsers.edges.map( edge => 
+                    <UserItem
+                        onDelete={this._handleConfirmDelete}
+                        onUpdate={this.props.onUserFocus}
+                        key={edge.node.id}
+                        user={edge.node}/>
+            )):(
+                <Header  content="It seams you don't have created any users yet." />
+               )
+            }
             <Confirm 
                 size="tiny"
                 content={(
