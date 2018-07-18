@@ -24,20 +24,20 @@ class App extends Component {
 
   state={
     userOnFocus: null,
-    isFormVisible: false,
+    isFormVisibleMobile: false,
     userFilter: {}
   }
 
-  _toogleFormVisible = () => {
+  _toggleFormVisibleMobile = () => {
     this.setState({
-      isFormVisible: !this.state.isFormVisible
+      isFormVisibleMobile: !this.state.isFormVisibleMobile
     })
   }
 
   _handleUserFocus = (userOnFocus) => {
     this.setState({
       userOnFocus,
-      isFormVisible: true
+      isFormVisibleMobile: true
     })
   }
 
@@ -58,7 +58,7 @@ class App extends Component {
   }
 
   render() {
-    const { userOnFocus, isFormVisible, userFilter } = this.state;
+    const { userOnFocus, isFormVisibleMobile, userFilter } = this.state;
     
     return (
       <QueryRenderer
@@ -70,9 +70,7 @@ class App extends Component {
         }}
         render={({error, props}) => {
           return (
-            <Dashboard 
-              isFormVisible={isFormVisible}
-              onToogleFormVisible={this._toogleFormVisible}
+            <Dashboard
               onChangeFilter={this._handleChangeUserFilter}
               filter={userFilter}
               header={{icon: 'user', label: 'User'}}
@@ -86,6 +84,9 @@ class App extends Component {
                 )
               }}
               form={{
+                isVisibleMobile: isFormVisibleMobile,
+                onToogleVisibleMobile: this._toggleFormVisibleMobile,
+                action: userOnFocus ? 'Update' : 'Create',
                 component: (
                   <UserForm 
                     userToUpdate={userOnFocus} 

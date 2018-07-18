@@ -26,8 +26,8 @@ export class Dashboard extends Component {
 
   render() {
     
-    const { header, data, form, isFormVisible, filter } = this.props;
-    const arrowPosition = isFormVisible ? 'left' : 'right';
+    const { header, data, form, filter } = this.props;
+    const arrowPosition = form.isVisibleMobile ? 'left' : 'right';
 
     const activeFilter = filter.active === undefined ? 0 : filter.active;
 
@@ -40,13 +40,13 @@ export class Dashboard extends Component {
             primary 
             basic 
             size="small" 
-            content={isFormVisible? `${header.label} list` : `Create ${header.label}`}
+            content={form.isVisibleMobile? `${header.label} list` : `${form.action} ${header.label}`}
             icon={`${arrowPosition} arrow`} labelPosition={arrowPosition}
-            onClick={this.props.onToogleFormVisible}
+            onClick={this.props.form.onToogleVisibleMobile}
           />
         </Header>
         <div className="content">
-          <div className={isFormVisible? 'hidden-mobile' : ''}>
+          <div className={form.isVisibleMobile? 'hidden-mobile' : ''}>
             <Menu attached="top">
               <Dropdown  
                 item
@@ -72,7 +72,7 @@ export class Dashboard extends Component {
               {data.isReady? data.component : <PlaceholderList length={6}/>}
             </Segment>
           </div>
-          <div className={!isFormVisible? 'hidden-mobile' : ''} >
+          <div className={!form.isVisibleMobile? 'hidden-mobile' : ''} >
               {form.component}
           </div>
         </div>
