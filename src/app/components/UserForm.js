@@ -142,6 +142,12 @@ export class UserForm extends React.Component {
         })
     }
 
+    _handleClearFocus = () =>{
+        this.setState({
+            fields: defaultFields
+        }, () => this.props.onClearUserFocus())
+    }
+
     async componentDidUpdate(prevProps){
         const { userToUpdate } = this.props;
         if (userToUpdate && userToUpdate !== prevProps.userToUpdate) {
@@ -193,7 +199,7 @@ export class UserForm extends React.Component {
                   (
                     <Button.Group  widths="2">
                         <Button fluid primary type='submit' content="Update"/>    
-                        <Button fluid type='button' content="Clear" onClick={this.props.onClearUserFocus}/>
+                        <Button fluid type='button' content="Clear" onClick={this._handleClearFocus}/>
                     </Button.Group>
                   )
                   :( 
