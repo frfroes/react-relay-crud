@@ -78,6 +78,7 @@ class UserListComponent extends React.Component<Props> {
         this.setState({
             userToDelete: null
         })
+        this.props.relay.loadMore(1);
     }
 
     _handleCancelDelete = () => {
