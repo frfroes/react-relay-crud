@@ -60,7 +60,7 @@ export class UserForm extends React.Component {
             onError: (error, failedData) => {
                 const { user, userId } = failedData;
                 
-                this._mapUserToFields(user);
+                this._mapUserToFields(user); //Ensures from repopulation on resquest error
                 if(userId){
                     this.props.onUserFocus({
                         ...user,
