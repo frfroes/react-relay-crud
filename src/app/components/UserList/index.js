@@ -68,6 +68,8 @@ class UserListComponent extends React.Component<Props> {
             onError: (error, { userToDelete }) => {
                 this.setState({
                     userToDelete: userToDelete
+                },() => {
+                    this.props.onUserFocus(userToDelete)
                 })
                 toast.error(error);
             },
@@ -77,8 +79,10 @@ class UserListComponent extends React.Component<Props> {
         })
         this.setState({
             userToDelete: null
+        }, () => {
+            this.props.relay.loadMore(1)
+            this.props.onClearUserFocus()
         })
-        this.props.relay.loadMore(1);
     }
 
     _handleCancelDelete = () => {

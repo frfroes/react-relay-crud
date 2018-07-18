@@ -84,8 +84,9 @@ export class UserForm extends React.Component {
         })
         this.setState({
             fields: defaultFields
+        }, () => {
+            this.props.onClearUserFocus();
         })
-        this.props.onClearUserFocus();
     }
 
     _validateField(name) {

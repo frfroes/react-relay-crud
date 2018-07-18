@@ -81,6 +81,7 @@ class App extends Component {
                 component: (
                   <UserList 
                     onUserFocus={this._handleUserFocus}
+                    onClearUserFocus={this._handleClearUserFocus}
                     userListData={props && props.viewer}/>
                 )
               }}
