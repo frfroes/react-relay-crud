@@ -17,19 +17,29 @@ const mutation = graphql`
 
 function commit({
   relayEnv=environment,
-  id,
+  userToDelete,
   onError,
   onSuccess
 }) {
+
   const variables = {
-    input: { id, clientMutationId: ''}
+    input: { 
+      id: userToDelete.id, 
+      clientMutationId: ''
+    }
   }
+
   return commitMutation(
     relayEnv,
     {
       mutation,
       variables: variables,
-      onError: () => onError('It seams something went wrong while deleting the user. Please, try angain later.'),
+      onError: () => {
+        onError(
+          'It seams something went wrong while deleting the user. Please, try angain later.', 
+          { userToDelete }
+        )
+      },
       onCompleted: (response, errors) => {
         const error = errors && errors.find(({path}) => path.includes('deleteUser'));
         if(error) {
@@ -52,7 +62,7 @@ function commit({
       optimisticUpdater: (proxyStore) => {
         const viewer = proxyStore.getRoot().getLinkedRecord('viewer');
         MutationUtil.deleteEdgeNode({
-          deletedId: id, 
+          deletedId: userToDelete.id, 
           connection: {
             record: viewer,
             key: 'UserList_allUsers'

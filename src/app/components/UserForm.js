@@ -57,9 +57,7 @@ export class UserForm extends React.Component {
         UpdateOrCreateUserMutation.commit({
             user,
             userId: userToUpdate && userToUpdate.id,
-            onError: (error, failedData) => {
-                const { user, userId } = failedData;
-                
+            onError: (error, { user, userId }) => {
                 this._mapUserToFields(user); //Ensures from repopulation on resquest error
                 if(userId){
                     this.props.onUserFocus({

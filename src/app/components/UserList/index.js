@@ -64,15 +64,19 @@ class UserListComponent extends React.Component<Props> {
 
         DeleteUserMutation.commit({
             relayEnv: relay.enviroment,
-            id: userToDelete.id,
-            onError: (error) => {
+            userToDelete: userToDelete,
+            onError: (error, { userToDelete }) => {
+                this.setState({
+                    userToDelete: userToDelete
+                })
                 toast.error(error);
             },
             onSuccess: ({deleteUser: { user }}) => {
-                this.setState({
-                    userToDelete: null
-                }, () => toast.info(<div>User <b>{user.name}</b> was deleted succefully</div>))
+                toast.info(<div>User <b>{user.name}</b> was deleted succefully</div>)
             }
+        })
+        this.setState({
+            userToDelete: null
         })
     }
 
